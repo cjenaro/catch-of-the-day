@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Header = () => {
+const Header = (props) => {
   return (
     <header className='top'>
       <h1>
@@ -12,7 +12,7 @@ const Header = () => {
         Day
       </h1>
       <h3 className='tagline'>
-        <span>Fresh Daily</span>
+        <span>{props.tagline}</span>
       </h3>
     </header>
   )
