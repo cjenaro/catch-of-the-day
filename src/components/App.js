@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
+import { AppContext } from './Context'
 import Header from './Header'
 import Inventory from './Inventory'
 import Order from './Order'
-import { AppContext } from './Context'
+import Fish from './Fish'
 
 const App = props => {
   const { appState, addFish } = useContext(AppContext)
@@ -11,6 +12,11 @@ const App = props => {
     <div className='catch-of-the-day'>
       <div className='menu'>
         <Header tagline='Fresh Seafood Market' />
+        <ul className='fishes'>
+          {Object.keys(appState.fishes).map(key => {
+            return <Fish key={key} {...appState.fishes[key]}/>
+          })}
+        </ul>
       </div>
       <Order />
       <Inventory />
