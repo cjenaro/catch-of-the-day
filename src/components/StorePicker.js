@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { getFunName } from '../helpers'
 
-const StorePicker = () => {
+const StorePicker = (props) => {
   const [store, setStore] = useState(getFunName())
 
   const goToStore = (e) => {
     e.preventDefault();
-    
+    props.history.push(`/store/${store}`)
   }
 
   return (
