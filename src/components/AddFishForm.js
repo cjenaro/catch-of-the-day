@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AppContext } from './Context'
 
-const AddFishForm = ({ addFish }) => {
+const AddFishForm = () => {
+  const { addFish } = useContext(AppContext)
   
   const createFish = e => {
     e.preventDefault()
