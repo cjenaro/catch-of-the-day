@@ -45,10 +45,39 @@ function AppStateProvider(props) {
     order[key] = order[key] + 1 || 1
     setAppState({ ...appState, order })
   }
+  const deleteFromOrder = key => {
+    const order = { ...appState.order }
+    delete order[key]
+    setAppState({ ...appState, order })
+  }
+
+  const updateFish = (key, data) => {
+    const fishToUpdate = appState.fishes[key]
+    if (fishToUpdate) {
+      const fishes = { ...appState.fishes }
+      fishes[key] = data
+      setAppState({ ...appState, fishes })
+    }
+  }
+
+  const deleteFish = key => {
+    const fishes = { ...appState.fishes }
+    fishes[key] = null
+    setAppState({ ...appState, fishes })
+  }
 
   return (
     <LocalStateProvider
-      value={{ appState, updateStepperState, addFish, addFishes, addToOrder }}
+      value={{
+        appState,
+        updateStepperState,
+        addFish,
+        addFishes,
+        addToOrder,
+        updateFish,
+        deleteFish,
+        deleteFromOrder
+      }}
     >
       {props.children}
     </LocalStateProvider>

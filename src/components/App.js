@@ -14,7 +14,7 @@ const App = props => {
         <Header tagline='Fresh Seafood Market' />
         <ul className='fishes'>
           {Object.keys(appState.fishes).map(key => {
-            return <Fish key={key} {...appState.fishes[key]} keyToPass={key} />
+            return appState.fishes[key] && <Fish key={key} {...appState.fishes[key]} keyToPass={key} />
           })}
         </ul>
       </div>

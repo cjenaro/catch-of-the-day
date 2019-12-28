@@ -3,7 +3,7 @@ import { AppContext } from './Context'
 import { formatPrice } from '../helpers'
 
 const Order = () => {
-  const { appState } = useContext(AppContext)
+  const { appState, deleteFromOrder } = useContext(AppContext)
   const orderIds = Object.keys(appState.order)
   const total = orderIds.reduce((prevTotal, key) => {
     const fish = appState.fishes[key]
@@ -22,7 +22,7 @@ const Order = () => {
         {orderIds.map(key => {
           const fish = appState.fishes[key]
           const count = appState.order[key]
-          const isAvailable = fish.status === 'available'
+          const isAvailable = fish && fish.status === 'available'
           if (!isAvailable) {
             return (
               <li key={key}>
@@ -34,6 +34,7 @@ const Order = () => {
             <li key={key}>
               {count} lbs {fish.name} 
               {formatPrice(count * fish.price)}
+              <button onClick={() => deleteFromOrder(key)}>&times;</button>
             </li>
           )
         })}
