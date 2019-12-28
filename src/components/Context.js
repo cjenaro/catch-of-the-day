@@ -1,14 +1,25 @@
 import React, { createContext, useState, useEffect } from 'react'
-
+import base from '../base'
 const AppContext = createContext({ fishes: {}, order: {} })
 const LocalStateProvider = AppContext.Provider
 
 function AppStateProvider(props) {
   const [appState, setAppState] = useState({ fishes: {}, order: {} })
 
-  // useEffect(() => {
-  //   window.localStorage.setItem('appState', JSON.stringify(appState))
-  // }, [appState])
+  useEffect(() => {
+    if (!appState.fishes.length) {
+      console.log('INITIAL LOAD')
+      base.fetch(`${props.storeId}/fishes`, {}).then(data => {
+        setAppState({ ...appState, fishes: data || {} })
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    base
+      .update(`${props.storeId}/fishes`, { data: appState.fishes })
+      .catch(err => console.log(err))
+  }, [appState, props.storeId])
 
   function updateStepperState(appState) {
     setAppState(appState)
