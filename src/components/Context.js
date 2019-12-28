@@ -1,19 +1,29 @@
 import React, { createContext, useState, useEffect } from 'react'
 import base from '../base'
+import firebase from 'firebase'
 const AppContext = createContext({ fishes: {}, order: {} })
 const LocalStateProvider = AppContext.Provider
 
 function AppStateProvider(props) {
   const [appState, setAppState] = useState({ fishes: {}, order: {} })
+  const fetchFishes = async () => {
+    return await base.fetch(`${props.storeId}/fishes`, {})
+  }
 
   useEffect(() => {
     const order = JSON.parse(window.localStorage.getItem(props.storeId)) || {}
 
+    firebase.auth().onAuthStateChanged(async user => {
+      if (user) {
+        await authHandler(user)
+      }
+    })
+
     if (!appState.fishes.length) {
-      console.log('INITIAL LOAD')
-      base.fetch(`${props.storeId}/fishes`, {}).then(data => {
-        setAppState({ fishes: data || {}, order })
-      })
+      fetchFishes()
+        .then(fishes => {
+          setAppState({ fishes: fishes || {}, order })
+        })
     }
   }, [])
 
@@ -66,6 +76,26 @@ function AppStateProvider(props) {
     setAppState({ ...appState, fishes })
   }
 
+  const authHandler = async user => {
+    const store = await base.fetch(`${props.storeId}`, {})
+    if (!store.owner) {
+      await base.post(`${props.storeId}/owner`, {
+        data: user.uid,
+      })
+    }
+
+    setAppState({
+      ...appState,
+      uid: user.uid,
+      owner: store.owner || user.uid,
+    })
+  }
+
+  const logout = async () => {
+    await firebase.auth().signOut()
+    setAppState({ ...appState, uid: null })
+  }
+
   return (
     <LocalStateProvider
       value={{
@@ -76,7 +106,9 @@ function AppStateProvider(props) {
         addToOrder,
         updateFish,
         deleteFish,
-        deleteFromOrder
+        deleteFromOrder,
+        authHandler,
+        logout,
       }}
     >
       {props.children}

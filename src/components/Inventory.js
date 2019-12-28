@@ -3,9 +3,11 @@ import AddFishForm from './AddFishForm'
 import EditFishForm from './EditFishForm'
 import { AppContext } from './Context'
 import fishes from '../sample-fishes'
+import Login from './Login'
 
 const Inventory = () => {
-  const { addFishes, appState } = useContext(AppContext)
+  const { addFishes, appState, logout } = useContext(AppContext)
+  const logoutBtn = <button onClick={logout}>Logout!</button>
 
   const loadSampleFishes = () => {
     let fishesToAdd = {}
@@ -15,9 +17,23 @@ const Inventory = () => {
     addFishes(fishesToAdd)
   }
 
+  if (!appState.uid) {
+    return <Login />
+  }
+
+  if (appState.uid !== appState.owner) {
+    return (
+      <div>
+        <p>Sorry, you are not the owner of this store!</p>
+        {logoutBtn}
+      </div>
+    )
+  }
+
   return (
     <div className='inventory'>
       <h2>Inventory</h2>
+      {logoutBtn}
       {Object.keys(appState.fishes).map(
         key =>
           appState.fishes[key] && (
