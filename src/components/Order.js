@@ -23,14 +23,15 @@ const Order = () => {
         {orderIds.map(key => {
           const fish = appState.fishes[key]
           const count = appState.order[key]
+          const orderTransition = {
+            classNames: 'order',
+            key: key,
+            timeout: { enter: 250, exit: 250 },
+          }
           const isAvailable = fish && fish.status === 'available'
           if (!isAvailable) {
             return (
-              <CSSTransition
-                classNames='order'
-                key={key}
-                timeout={{ enter: 250, exit: 250 }}
-              >
+              <CSSTransition {...orderTransition}>
                 <li key={key}>
                   Sorry {fish ? fish.name : 'fish'} is no longer available
                 </li>
@@ -38,11 +39,7 @@ const Order = () => {
             )
           }
           return (
-            <CSSTransition
-              classNames='order'
-              key={key}
-              timeout={{ enter: 250, exit: 250 }}
-            >
+            <CSSTransition {...orderTransition}>
               <li key={key}>
                 <span>
                   <TransitionGroup component='span' className='count'>
