@@ -7,15 +7,19 @@ function AppStateProvider(props) {
   const [appState, setAppState] = useState({ fishes: {}, order: {} })
 
   useEffect(() => {
+    const order = JSON.parse(window.localStorage.getItem(props.storeId)) || {}
+
     if (!appState.fishes.length) {
       console.log('INITIAL LOAD')
       base.fetch(`${props.storeId}/fishes`, {}).then(data => {
-        setAppState({ ...appState, fishes: data || {} })
+        setAppState({ fishes: data || {}, order })
       })
     }
   }, [])
 
   useEffect(() => {
+    window.localStorage.setItem(props.storeId, JSON.stringify(appState.order))
+
     base
       .update(`${props.storeId}/fishes`, { data: appState.fishes })
       .catch(err => console.log(err))
