@@ -5,8 +5,8 @@ import Inventory from './Inventory'
 import Order from './Order'
 import Fish from './Fish'
 
-const App = props => {
-  const { appState, addFish } = useContext(AppContext)
+const App = () => {
+  const { appState } = useContext(AppContext)
 
   return (
     <div className='catch-of-the-day'>

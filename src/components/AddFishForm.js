@@ -8,7 +8,7 @@ const AddFishForm = () => {
     e.preventDefault()
     addFish({
       name: e.target.name.value,
-      price: parseFloat(e.target.price.value),
+      price: parseFloat(e.target.price.value || '0'),
       status: e.target.status.value,
       desc: e.target.desc.value,
       image: e.target.image.value,
