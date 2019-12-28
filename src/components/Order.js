@@ -18,7 +18,7 @@ const Order = () => {
   return (
     <div className='order-wrap'>
       <h2>Order</h2>
-      <ul>
+      <ul className="order">
         {orderIds.map(key => {
           const fish = appState.fishes[key]
           const count = appState.order[key]
@@ -32,7 +32,7 @@ const Order = () => {
           }
           return (
             <li key={key}>
-              {count} lbs {fish.name}
+              {count} lbs {fish.name} 
               {formatPrice(count * fish.price)}
             </li>
           )
