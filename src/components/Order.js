@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { AppContext } from './Context'
 import { formatPrice } from '../helpers'
 
@@ -18,27 +19,50 @@ const Order = () => {
   return (
     <div className='order-wrap'>
       <h2>Order</h2>
-      <ul className="order">
+      <TransitionGroup component='ul' className='order'>
         {orderIds.map(key => {
           const fish = appState.fishes[key]
           const count = appState.order[key]
           const isAvailable = fish && fish.status === 'available'
           if (!isAvailable) {
             return (
-              <li key={key}>
-                Sorry {fish ? fish.name : 'fish'} is no longer available
-              </li>
+              <CSSTransition
+                classNames='order'
+                key={key}
+                timeout={{ enter: 250, exit: 250 }}
+              >
+                <li key={key}>
+                  Sorry {fish ? fish.name : 'fish'} is no longer available
+                </li>
+              </CSSTransition>
             )
           }
           return (
-            <li key={key}>
-              {count} lbs {fish.name} 
-              {formatPrice(count * fish.price)}
-              <button onClick={() => deleteFromOrder(key)}>&times;</button>
-            </li>
+            <CSSTransition
+              classNames='order'
+              key={key}
+              timeout={{ enter: 250, exit: 250 }}
+            >
+              <li key={key}>
+                <span>
+                  <TransitionGroup component='span' className='count'>
+                    <CSSTransition
+                      classNames='count'
+                      key={count}
+                      timeout={{ enter: 250, exit: 250 }}
+                    >
+                      <span>{count}</span>
+                    </CSSTransition>
+                  </TransitionGroup>
+                  lbs {fish.name}
+                  {formatPrice(count * fish.price)}
+                  <button onClick={() => deleteFromOrder(key)}>&times;</button>
+                </span>
+              </li>
+            </CSSTransition>
           )
         })}
-      </ul>
+      </TransitionGroup>
       <div className='total'>
         Total: <strong>{formatPrice(total)}</strong>
       </div>
